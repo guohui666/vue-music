@@ -7,7 +7,7 @@
 
 <script type="text/ecmascript-6">
   import MusicList from 'components/music-list/music-list'
-  import { mapGetters } from 'vuex'
+  // import { mapGetters } from 'vuex'
   import { getSingerDetail } from 'api/singer'
   import { ERR_OK } from 'api/config'
   import { createSong } from 'common/js/song'
@@ -15,9 +15,12 @@
   export default {
     computed: {
       //  要重启服务，我*
-      ...mapGetters([
-        'singer'
-      ]),
+      singer () {
+        return this.$store.state.singer
+      },
+      // ...mapGetters([
+      //   'singer'
+      // ]),
       title () { //  return
         if (!this.singer) {
           return ''
@@ -67,11 +70,11 @@
         return ret
       }
     },
-    watch: {
-      singer () {
-        this._getDetail()
-      }
-    },
+    // watch: {
+    //   singer () {
+    //     this._getDetail()
+    //   }
+    // },
     components: {
       MusicList
     }
