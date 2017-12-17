@@ -7,39 +7,32 @@
 
 <script type="text/ecmascript-6">
   import MusicList from 'components/music-list/music-list'
-  // import { mapGetters } from 'vuex'
-  import { getSingerDetail } from 'api/singer'
-  import { ERR_OK } from 'api/config'
-  import { createSong } from 'common/js/song'
+  import {mapGetters} from 'vuex'
+  import {getSingerDetail} from 'api/singer'
+  import {ERR_OK} from 'api/config'
+  import {createSong} from 'common/js/song'
 
   export default {
     computed: {
-      //  要重启服务，我*
-      singer () {
-        return this.$store.state.singer
-      },
-      // ...mapGetters([
-      //   'singer'
-      // ]),
-      title () { //  return
-        if (!this.singer) {
-          return ''
-        }
+//      singer () {
+//        return this.$store.state.singer
+//      },
+      ...mapGetters([
+        'singer'
+      ]),
+      title() { //  return
         return this.singer.name
       },
-      bgImage () { //  return
-        if (!this.singer) {
-          return ''
-        }
+      bgImage() { //  return
         return this.singer.avatar
       }
     },
-    data () {
+    data() {
       return {
         songs: []
       }
     },
-    created () {
+    created() {
       if (!this.singer) {
         this.$router.push('/singer')
         return
@@ -47,9 +40,9 @@
       this._getDetail()
     },
     methods: {
-      _getDetail () {
+      _getDetail() {
         console.log(this.singer)
-        if (!this.singer) {
+        if (!this.singer.id) {
           this.$router.push('/singer')
           return
         }
@@ -59,7 +52,7 @@
           }
         })
       },
-      _normalizeSong (list) {
+      _normalizeSong(list) {
         let ret = []
         list.forEach((item) => {
           let {musicData} = item

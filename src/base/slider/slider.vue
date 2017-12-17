@@ -91,8 +91,8 @@
             loop: this.loop,
             threshold: 0.3,
             speed: 400
-          },
-          click: true
+          }
+//          click: true
         })
         this.slider.on('scrollEnd', () => {
           let pageIndex = this.slider.getCurrentPage().pageX

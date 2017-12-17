@@ -1,2 +1,3 @@
 [1113/085948.418:ERROR:http_transport_win.cc(268)] WinHttpSendRequest: 无法与服务器建立连接  (0x2efd)
 [1128/171103.868:ERROR:http_transport_win.cc(268)] WinHttpSendRequest: 无法与服务器建立连接  (0x2efd)
+[1215/190101.888:ERROR:http_transport_win.cc(268)] WinHttpSendRequest: 操作超时  (0x2ee2)
