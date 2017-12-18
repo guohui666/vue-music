@@ -33,7 +33,7 @@
       }
     },
     created() {
-      if (!this.singer) {
+      if (!this.singer.id) {
         this.$router.push('/singer')
         return
       }

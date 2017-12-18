@@ -29,8 +29,8 @@
   import scroll from 'base/scroll/scroll'
   import songList from 'base/song-list/song-list'
   import loading from 'base/loading/loading'
-  import {prefixStyle} from 'common/js/dom'
-  import {mapActions} from 'vuex'
+  import { prefixStyle } from 'common/js/dom'
+  import { mapActions } from 'vuex'
 
   const RESERVED_HEIGHT = 40
   const transform = prefixStyle('transform')
@@ -55,34 +55,34 @@
         default: false
       }
     },
-    data() {
+    data () {
       return {
         scrollY: 0
       }
     },
     computed: {
-      bgStyle() {
+      bgStyle () {
         return `background-image:url(${this.bgImage})`
       }
     },
-    created() {
+    created () {
       this.probeType = 3
       this.listenScroll = true
     },
-    mounted() {
+    mounted () {
       // $refs.list.$el.style.top 引用的组件要使用此方法取dom对象
       this.imageHeight = this.$refs.bgImage.clientHeight
       this.minTranslateY = -this.imageHeight + RESERVED_HEIGHT
       this.$refs.list.$el.style.top = `${this.$refs.bgImage.clientHeight}px`
     },
     methods: {
-      scroll(pos) {
+      scroll (pos) {
         this.scrollY = pos.y
       },
-      back() {
+      back () {
         this.$router.back()
       },
-      selectItem(item, index) {
+      selectItem (item, index) {
         this.selectPlay({
           list: this.songs,
           index: index
@@ -93,7 +93,7 @@
       ])
     },
     watch: {
-      scrollY(newY) {
+      scrollY (newY) {
         let scale = 1
         //  比对，不能超过第一个参数
         let translateY = Math.max(this.minTranslateY, newY)
