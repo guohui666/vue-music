@@ -14,9 +14,9 @@
         <div class="recommend-list">
           <h1 class="list-title">热门歌单推荐</h1>
           <ul>
-            <li v-for="(item,index) in discList" class="item">
+            <li @click="testClick($event,index)" v-for="(item,index) in discList" class="item">
               <div class="icon">
-                <img  width="60" height="60" v-lazy="item.imgurl">
+                <img width="60" height="60" v-lazy="item.imgurl">
               </div>
               <div class="text">
                 <h2 class="name" v-html="item.creator.name"></h2>
@@ -39,6 +39,8 @@
   import { ERR_OK } from 'api/config'
   import Scroll from 'base/scroll/scroll'
   import Loading from 'base/loading/loading'
+  import nativeCall from 'common/js/app'
+
   export default {
     components: {
       Slider,
@@ -58,6 +60,12 @@
       this._getDiscList()
     },
     methods: {
+      testClick (event, index) {
+        let command = {
+          'action': 'test'
+        }
+        latte.event(JSON.stringify(command))
+      },
       _getRecommend () {
         getRecommend().then((res) => {
           if (res.code === ERR_OK) {
