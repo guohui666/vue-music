@@ -35,8 +35,8 @@
 
 <script type="text/ecmascript-6">
   import Slider from 'base/slider/slider'
-  import { getRecommend, getDiscList } from 'api/recommend'
-  import { ERR_OK } from 'api/config'
+  import {getRecommend, getDiscList} from 'api/recommend'
+  import {ERR_OK} from 'api/config'
   import Scroll from 'base/scroll/scroll'
   import Loading from 'base/loading/loading'
   import nativeCall from 'common/js/app'
@@ -47,38 +47,59 @@
       Scroll,
       Loading
     },
-    data () {
+    data() {
       return {
         recommend: [],
         discList: []
       }
     },
-    created () {
+    created() {
       setTimeout(() => {
         this._getRecommend()
       }, 20)
       this._getDiscList()
     },
     methods: {
-      testClick (event, index) {
+      testClick(event, index) {
         let command = {
           'action': 'test'
         }
-        latte.event(JSON.stringify(command))
+//        createdEwm:function(id,name,token){
+//          var ewmUrl="bind|"+id+"|"+name//+"|"+token
+//          var ewmPath=''
+//          jsbridge.callMethod({
+//            methodName:"qrGenerate",
+//            params:{url:ewmUrl,size:150},
+//            complete:function(data){
+//              let obj = JSON.parse(data);
+//              if(obj.errCode=='0'){
+//                ewmPath=obj.path
+//              }else{
+//                alert(obj.errMsg)
+//                ewmPath=''
+//              }
+//              alert(ewmPath)
+//              return ewmPath
+//            }
+//          })
+//        }
+//        jsbridge.latte.event(JSON.stringify(command)).then((res) => {
+//          alert(1)
+//        })
       },
-      _getRecommend () {
+      _getRecommend() {
         getRecommend().then((res) => {
           if (res.code === ERR_OK) {
             this.recommend = res.data.slider
           }
         })
       },
-      _getDiscList () {
+      _getDiscList() {
         getDiscList().then((res) => {
           this.discList = res.data.list
         })
       },
-      loadImage () {
+      loadImage() {
         if (!this.checkLoaded) {
           this.$refs.scroll.refresh()
           this.checkLoaded = true
