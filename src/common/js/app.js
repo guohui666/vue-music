@@ -1,3 +1,3 @@
-export default window['nativeCall'] = function () {
-  alert('1')
+export function registerWindow (name, content) {
+  window['name'] = content
 }
