@@ -41,23 +41,23 @@
             <span class="dot"></span>
           </div>
           <div class="progress-wrapper">
-            <span class="time time-l"></span>
+            <span class="time time-l">{{format(currentTime)}}</span>
             <div class="progress-bar-wrapper">
-              <!--<progress-bar></progress-bar>-->
+              <progress-bar :percent="percent"></progress-bar>
             </div>
-            <span class="time time-r"></span>
+            <span class="time time-r">{{format(currentSong.duration)}}</span>
           </div>
           <div class="operators">
             <div class="icon i-left">
               <i class="icon-sequence"></i>
             </div>
-            <div class="icon i-left">
+            <div class="icon i-left" :class="disableCls">
               <i @click="prev" class="icon-prev"></i>
             </div>
-            <div class="icon i-center">
+            <div class="icon i-center" :class="disableCls">
               <i @click="togglePlaying" :class="playIcon"></i>
             </div>
-            <div class="icon i-right">
+            <div class="icon i-right" :class="disableCls">
               <i @click="next" class="icon-next"></i>
             </div>
             <div class="icon i-right">
@@ -88,7 +88,7 @@
         </div>
       </div>
     </transition>
-    <audio ref="audio" :src="currentSong.url" @canplay="ready" @error="error"></audio>
+    <audio ref="audio" :src="currentSong.url" @canplay="ready" @error="error" @timeupdate="updateTime"></audio>
   </div>
 
 </template>
@@ -96,6 +96,7 @@
 <script type="text/ecmascript-6">
   import { mapGetters, mapMutations } from 'vuex'
   import scroll from 'base/scroll/scroll'
+  import progressBar from 'base/progress-bar/progress-bar'
   import animations from 'create-keyframe-animation' // 第三方动画库
   import { prefixStyle } from 'common/js/dom'
 
@@ -103,8 +104,9 @@
   export default {
     data () {
       return {
-        songReady: false
+        songReady: false,
         // errorFlag: -1
+        currentTime: 0
       }
     },
     computed: {
@@ -116,6 +118,12 @@
       },
       miniIcon () {
         return this.playing ? 'icon-pause-mini' : 'icon-play-mini'
+      },
+      disableCls () {
+        return this.songReady ? '' : 'disable'
+      },
+      percent () {
+        return this.currentTime / this.currentSong.duration
       },
       ...mapGetters([
         'fullScreen',
@@ -176,7 +184,6 @@
         this.$refs.cdWrapper.style.transition = 'all 0.4s'
         const {x, y, scale} = this._getPosAndScale()
         this.$refs.cdWrapper.style[transform] = `translate3d(${x}px,${y}px,0) scale(${scale})`
-        console.log(this.$refs.cdWrapper.style.transform)
         const timer = setTimeout(done, 400)
         this.$refs.cdWrapper.addEventListener('transitionend', () => {
           clearTimeout(timer)
@@ -226,6 +233,23 @@
         }
         this.songReady = false
       },
+      updateTime (e) {
+        this.currentTime = e.target.currentTime
+      },
+      format (interval) {
+        interval = interval | 0
+        const minute = interval / 60 | 0
+        const second = this._pad(interval % 60)
+        return `${minute}:${second}`
+      },
+      _pad (num, n = 2) {
+        let len = num.toString().length
+        while (len < n) {
+          num = `0` + num
+          len++
+        }
+        return num
+      },
       _getPosAndScale () {
         const targetWidth = 40
         const paddingLeft = 40
@@ -261,7 +285,8 @@
       }
     },
     components: {
-      scroll
+      scroll,
+      progressBar
     }
   }
 </script>
