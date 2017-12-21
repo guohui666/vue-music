@@ -40,8 +40,6 @@
   import { ERR_OK } from 'api/config'
   import Scroll from 'base/scroll/scroll'
   import Loading from 'base/loading/loading'
-  // const JSBridge = require('jsbridge');
-  // import { registerWindow } from 'common/js/app'
   import { JsBridge } from 'common/js/jsBridge'
 
   export default {
@@ -69,18 +67,17 @@
     created () {
       setTimeout(() => {
         this._getRecommend()
-        // window.functionInJs = this.functionInJs
-        // registerWindow('functionInJs', this.functionInJs)
       }, 20)
       this._getDiscList()
     },
     methods: {
       testClick (event, index) {
+        console.log(window)
         let command = {
-          'action': 'test'
+          'test': '成功'
         }
         JsBridge.callHandler(
-          'submitFromWeb',  //  原生声明的函数名称
+          'action',  //  原生声明的函数名称
           {data: command},  //  发送给原生的数据
           (res) => {
             alert(res)
