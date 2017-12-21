@@ -14,7 +14,7 @@
         <div class="recommend-list">
           <h1 class="list-title">热门歌单推荐</h1>
           <ul>
-            <li v-for="(item,index) in discList" class="item">
+            <li @click="testClick" v-for="(item,index) in discList" class="item">
               <div class="icon">
                 <img width="60" height="60" v-lazy="item.imgurl">
               </div>
@@ -40,9 +40,9 @@
   import { ERR_OK } from 'api/config'
   import Scroll from 'base/scroll/scroll'
   import Loading from 'base/loading/loading'
-  // import { JsBridge } from 'common/js/jsBridge'
   // const JSBridge = require('jsbridge');
   // import { registerWindow } from 'common/js/app'
+  import { JsBridge } from 'common/js/jsBridge'
 
   export default {
     components: {
@@ -58,59 +58,37 @@
       }
     },
     mounted () {
-      // JsBridge.registerHandler(
-      //   'nativeCall',//注册的方法名，供原生调用
-      //   (data, responseCallback) => {
-      //     data = JSON.stringify(data) // 收到原生发来的数据
-      //     responseCallback('js say: got it!')//处理完成后返回给原生
-      //   })
+      JsBridge.registerHandler(
+        'functionInJs', // 注册的方法名，供原生调用
+        (data, responseCallback) => {
+          data = JSON.stringify(data) // 收到原生发来的数据
+          alert(this.testMum)
+          responseCallback('js say: got it!')//   处理完成后返回给原生
+        })
     },
     created () {
       setTimeout(() => {
         this._getRecommend()
+        // window.functionInJs = this.functionInJs
+        // registerWindow('functionInJs', this.functionInJs)
       }, 20)
       this._getDiscList()
     },
     methods: {
-      // nativeCall () {
-      //   console.log(this.recommend)
-      // },
-      // testClick (event, index) {
-      //   // JsBridge.init('jsbridge', 'localhost')
-      //   registerWindow('nativeCall', this.nativeCall())
-      //   console.log(window)
-      //   window.nativeCall()
-      //   let command = {
-      //     'action': 'test'
-      //   }
-      //   JsBridge.callHandler(
-      //     command,//原生声明的函数名称
-      //     {data: command},//发送给原生的数据
-      //     (res) => {
-      //       res = JSON.parse(res) //  原生处理完成后返回的数据
-      //     }
-      //   )
-      //  createdEwm:function(id,name,token){
-      //    var ewmUrl="bind|"+id+"|"+name//+"|"+token
-      //    var ewmPath=''
-      //    jsbridge.callMethod({
-      //      methodName:"qrGenerate",
-      //      params:{url:ewmUrl,size:150},
-      //      complete:function(data){
-      //        let obj = JSON.parse(data);
-      //        if(obj.errCode=='0'){
-      //          ewmPath=obj.path
-      //        }else{
-      //          alert(obj.errMsg)
-      //          ewmPath=''
-      //        }
-      //        alert(ewmPath)
-      //        return ewmPath
-      //      }
-      //    })
-      //  }
-      //   latte.event(JSON.stringify(command))
-      // },
+      testClick (event, index) {
+        let command = {
+          'action': 'test'
+        }
+        JsBridge.callHandler(
+          'submitFromWeb',  //  原生声明的函数名称
+          {data: command},  //  发送给原生的数据
+          (res) => {
+            alert(res)
+            // res = JSON.parse(res) //  原生处理完成后返回的数据
+          }
+        )
+        // latte.event(JSON.stringify(command))
+      },
       _getRecommend () {
         getRecommend().then((res) => {
           if (res.code === ERR_OK) {
