@@ -7,39 +7,42 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import {getSingersList} from 'api/singer'
-  import {ERR_OK} from 'api/config'
+  import { getSingersList } from 'api/singer'
+  import { ERR_OK } from 'api/config'
   import Singer from 'common/js/singer'
   import ListView from 'base/ListView/listview'
-  import {mapMutations} from 'vuex'
+  import { mapMutations } from 'vuex'
+  import { setupWebViewJavascriptBridge } from 'common/js/app'
 
   const HOT_NAME = '热门'
   const HOT_SINGER_LENGTH = 10
   export default {
     mixins: [],
-    data() {
+    data () {
       return {
         singers: []
       }
     },
-    created() {
+    mounted () {
+    },
+    created () {
       this._getSingerList()
     },
     methods: {
-      selectSinger(singer) {
+      selectSinger (singer) {
         this.$router.push({
           path: `/singer/${singer.id}`
         })
         this.setSinger(singer)
       },
-      _getSingerList() {
+      _getSingerList () {
         getSingersList().then((res) => {
           if (res.code === ERR_OK) {
             this.singers = this._normalizeSinger(res.data.list)
           }
         })
       },
-      _normalizeSinger(list) {
+      _normalizeSinger (list) {
         let map = {
           hot: {
             title: HOT_NAME,

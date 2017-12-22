@@ -13,6 +13,7 @@
         </div>
         <div class="recommend-list">
           <h1 class="list-title">热门歌单推荐</h1>
+          <li>{{testMum}}</li>
           <ul>
             <li @click="testClick" v-for="(item,index) in discList" class="item">
               <div class="icon">
@@ -40,8 +41,9 @@
   import { ERR_OK } from 'api/config'
   import Scroll from 'base/scroll/scroll'
   import Loading from 'base/loading/loading'
-  import { JsBridge } from 'common/js/jsBridge'
-
+  import { registerWindow } from 'common/js/app'
+  import { setupWebViewJavascriptBridge } from 'common/js/app'
+  // import { JsBridge } from 'common/js/jsBridge'
   export default {
     components: {
       Slider,
@@ -56,13 +58,12 @@
       }
     },
     mounted () {
-      JsBridge.registerHandler(
-        'functionInJs', // 注册的方法名，供原生调用
-        (data, responseCallback) => {
-          data = JSON.stringify(data) // 收到原生发来的数据
-          alert(this.testMum)
-          responseCallback('js say: got it!')//   处理完成后返回给原生
-        })
+      // JsBridge.registerHandler(
+      //   'testJs',//注册的方法名，供原生调用
+      //   (data, responseCallback) => {
+      //     data = JSON.stringify(data) //  收到原生发来的数据
+      //     responseCallback('js say: got it!')//处理完成后返回给原生
+      //   })
     },
     created () {
       setTimeout(() => {
@@ -72,18 +73,33 @@
     },
     methods: {
       testClick (event, index) {
-        console.log(window)
-        let command = {
-          'test': '成功'
-        }
-        JsBridge.callHandler(
-          'action',  //  原生声明的函数名称
-          {data: command},  //  发送给原生的数据
-          (res) => {
-            alert(res)
-            // res = JSON.parse(res) //  原生处理完成后返回的数据
-          }
-        )
+        let _this = this
+        let params = JSON.stringify({
+          data: `call js confirm in js`,
+          callback: registerWindow(`setLocation`, (res) => {
+            this.testMum = res
+          })
+        })
+        window.webkit.messageHandlers.Location.postMessage(params)
+        // console.log(window)
+        // window.webkit.messageHandlers.AppModel.postMessage({body: 'call js confirm in js'});
+        // WebViewJavascriptBridge.callHandler('test', null, function (response) {
+        //   document.write(response)
+        // alert(response)
+        // document.getElementById('returnValue').value = response
+        // })
+        // window.webkit.messageHandlers.test.postMessage({body: 'call js confirm in js'})
+        // let command = {
+        //   'test': '成功'
+        // }
+        // JsBridge.callHandler(
+        //   'action',  //  原生声明的函数名称
+        //   {data: command},  //  发送给原生的数据
+        //   (res) => {
+        //     document.write(res)
+        //     // res = JSON.parse(res) //  原生处理完成后返回的数据
+        //   }
+        // )
         // latte.event(JSON.stringify(command))
       },
       _getRecommend () {
