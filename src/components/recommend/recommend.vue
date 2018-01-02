@@ -13,7 +13,6 @@
         </div>
         <div class="recommend-list">
           <h1 class="list-title">热门歌单推荐</h1>
-          <li>{{testMum}}</li>
           <ul>
             <li @click="testClick" v-for="(item,index) in discList" class="item">
               <div class="icon">

@@ -1,5 +1,5 @@
 <template>
-  <div class="progress-bar" ref="progressBar">
+  <div class="progress-bar" ref="progressBar" @click="progressBarClick">
     <div class="bar-inner">
       <div class="progress" ref="progress"></div>
       <div class="progress-btn-wrapper" ref="progressBtn"
@@ -14,7 +14,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import { prefixStyle } from 'common/js/dom'
+  import {prefixStyle} from 'common/js/dom'
 
   const transform = prefixStyle('transform')
   const progressBtnWidth = 16
@@ -25,16 +25,16 @@
         default: 0
       }
     },
-    created () {
+    created() {
       this.touch = {} //  共享数据
     },
     methods: {
-      progressTouchStart (e) {
+      progressTouchStart(e) {
         this.touch.initiated = true
         this.touch.startX = e.touches[0].pageX
         this.touch.left = this.$refs.progress.clientWidth
       },
-      progressTouchMove (e) {
+      progressTouchMove(e) {
         if (!this.touch.initiated) {
           return false
         }
@@ -42,17 +42,31 @@
         const offsetWidth = Math.min(this.$refs.progressBar.clientWidth - progressBtnWidth, Math.max(0, this.touch.left + deltaX))
         this._offset(offsetWidth)
       },
-      progressTouchEnd (e) {
+      progressTouchEnd(e) {
         this.touch.initiated = false
+        this._triggerPercent()
       },
-      _offset (offsetWidth) {
+      progressBarClick(e) {
+        // 这里当我们点击 progressBtn 的时候，e.offsetX 获取不对
+        // this._offset(e.offsetX)
+        const rect = this.$refs.progressBar.getBoundingClientRect() //  获取距离视口的一系列参数
+        const offsetWidth = e.pageX - rect.left
+        this._offset(offsetWidth)
+        this._triggerPercent()
+      },
+      _offset(offsetWidth) {
         this.$refs.progress.style.width = `${offsetWidth}px`
         this.$refs.progressBtn.style[transform] = `translate3d(${offsetWidth}px,0,0)`
+      },
+      _triggerPercent() {
+        const barWidth = this.$refs.progressBar.clientWidth - progressBtnWidth
+        const percent = this.$refs.progress.clientWidth / barWidth
+        this.$emit('percentChange', percent)
       }
     },
     watch: {
-      percent (newPercent) {
-        if (newPercent >= 0) {
+      percent(newPercent) {
+        if (newPercent >= 0 && !this.touch.initiated) {
           const barWidth = this.$refs.progressBar.clientWidth - progressBtnWidth
           const offsetWidth = newPercent * barWidth
           this._offset(offsetWidth)
