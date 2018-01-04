@@ -289,7 +289,7 @@
         if (Math.abs(deltaY > Math.abs(deltaX))) {
           return
         }
-        const time = 350
+        const time = 300
         const left = this.currentShow === 'cd' ? 0 : -window.innerWidth
         const offsetWidth = Math.min(0, Math.max(-window.innerWidth, left + deltaX))
         this.touch.percent = Math.abs(offsetWidth / window.innerWidth)
@@ -301,8 +301,10 @@
       middleTouchEnd() {
         let offsetWidth
         let opacity
-        console.log(this.touch.percent)
         if (this.currentShow === 'cd') {
+          if (this.touch.percent === 0) {
+            return
+          }
           if (this.touch.percent > 0.1) {
             offsetWidth = -window.innerWidth
             opacity = 0
@@ -312,6 +314,9 @@
             opacity = 1
           }
         } else {
+          if (this.touch.percent === 1) {
+            return
+          }
           if (this.touch.percent < 0.9) {
             offsetWidth = 0
             opacity = 1
