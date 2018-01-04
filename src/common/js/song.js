@@ -1,5 +1,9 @@
+import {getLyric} from '../../api/song'
+import {ERR_OK} from '../../api/config'
+import {Base64} from 'js-base64'
+
 export default class Song { //  不能以小写字母开头，eslint会报错
-  constructor ({id, mid, singer, name, album, duration, image, url}) {
+  constructor({id, mid, singer, name, album, duration, image, url}) {
     this.id = id
     this.mid = mid
     this.singer = singer
@@ -9,9 +13,27 @@ export default class Song { //  不能以小写字母开头，eslint会报错
     this.image = image
     this.url = url
   }
+
+//  获取歌词
+  getLyric() {
+    if (this.lyric) {
+      return Promise.resolve(this.lyric)
+    }
+    return new Promise((resolve, reject) => {
+      getLyric(this.mid).then((res) => {
+        if (res.retcode === ERR_OK) {
+          this.lyric = Base64.decode(res.lyric)
+          resolve(this.lyric)
+        } else {
+          reject(new Error('no lyric'))
+          // reject('no lyric')
+        }
+      })
+    })
+  }
 }
 
-export function createSong (musicData) {
+export function createSong(musicData) {
   return new Song({
     id: musicData.songid,
     mid: musicData.songmid,
@@ -24,7 +46,7 @@ export function createSong (musicData) {
   })
 }
 
-function filterSinger (singer) {
+function filterSinger(singer) {
   let ret = []
   if (!singer) {
     return ''

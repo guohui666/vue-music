@@ -41,7 +41,31 @@ apiRouter.get('/getDistList', function (req, res, next) {
     console.log(e)
   })
 })
-app.use('/api',apiRouter)
+apiRouter.get('/getLyric', function (req, res, next) {
+  let url = 'https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg'
+  axios.get(url, {
+    headers: {
+      referer: 'http://c.y.qq.com',
+      host: 'c.y.qq.com'
+    },
+    params: req.query
+  }).then((response) => {
+    let ret = response.data
+    if (typeof ret === 'string') {
+      let reg =/^\w+\(({.+})\)$/    // /^\w+\(({[^()]+})\)$/
+      console.log(+new Date)
+      var matches = ret.match(reg)
+      console.log(+new Date)
+      if (matches) {
+        ret = JSON.parse(matches[1])
+      }
+    }
+    res.json(ret)
+  }).catch((e) => {
+    console.log(e)
+  })
+})
+app.use('/api', apiRouter)
 // //修改的内容end
 
 const compiler = webpack(webpackConfig)
