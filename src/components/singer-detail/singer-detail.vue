@@ -41,7 +41,6 @@
     },
     methods: {
       _getDetail() {
-        console.log(this.singer)
         if (!this.singer.id) {
           this.$router.push('/singer')
           return

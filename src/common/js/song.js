@@ -1,9 +1,11 @@
-import {getLyric} from '../../api/song'
-import {ERR_OK} from '../../api/config'
-import {Base64} from 'js-base64'
+import { getLyric, getVKey } from '../../api/song'
+import { ERR_OK } from '../../api/config'
+import { getUid } from './uid'
+import { Base64 } from 'js-base64'
 
+let urlMap = {}
 export default class Song { //  不能以小写字母开头，eslint会报错
-  constructor({id, mid, singer, name, album, duration, image, url}) {
+  constructor ({id, mid, singer, name, album, duration, image, url}) {
     this.id = id
     this.mid = mid
     this.singer = singer
@@ -11,11 +13,17 @@ export default class Song { //  不能以小写字母开头，eslint会报错
     this.album = album
     this.duration = duration
     this.image = image
-    this.url = url
+    this.filename = `C400${this.mid}.m4a`
+    // 确保一首歌曲的 id 只对应一个 url
+    if (urlMap[this.id]) {
+      this.url = urlMap[this.id]
+    } else {
+      this._genUrl()
+    }
   }
 
 //  获取歌词
-  getLyric() {
+  getLyric () {
     if (this.lyric) {
       return Promise.resolve(this.lyric)
     }
@@ -31,9 +39,22 @@ export default class Song { //  不能以小写字母开头，eslint会报错
       })
     })
   }
+
+  _genUrl () {
+    if (this.url) {
+      return
+    }
+    getVKey(this.mid, this.filename).then((res) => {
+      if (res.code === ERR_OK) {
+        const vkey = res.data.items[0].vkey
+        this.url = `http://dl.stream.qqmusic.qq.com/${this.filename}?vkey=${vkey}&guid=${getUid()}&uin=0&fromtag=66`
+        urlMap[this.id] = this.url
+      }
+    })
+  }
 }
 
-export function createSong(musicData) {
+export function createSong (musicData) {
   return new Song({
     id: musicData.songid,
     mid: musicData.songmid,
@@ -41,12 +62,12 @@ export function createSong(musicData) {
     singer: filterSinger(musicData.singer),
     album: musicData.albumname,
     duration: musicData.interval,
-    image: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${musicData.albummid}.jpg?max_age=2592000`,
-    url: `http://ws.stream.qqmusic.qq.com/${musicData.songid}.m4a?fromtag=46`
+    image: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${musicData.albummid}.jpg?max_age=2592000`
+    // url: `http://ws.stream.qqmusic.qq.com/${musicData.songid}.m4a?fromtag=46`
   })
 }
 
-function filterSinger(singer) {
+function filterSinger (singer) {
   let ret = []
   if (!singer) {
     return ''
