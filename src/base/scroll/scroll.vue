@@ -6,7 +6,7 @@
 
 <script type="text/ecmascript-6">
   import BScroll from 'better-scroll'
-//  const DIRECTION_H = 'horizontal'
+  //  const DIRECTION_H = 'horizontal'
   const DIRECTION_V = 'vertical'
   export default {
     props: {
@@ -76,7 +76,7 @@
       refresh () {
         this.scroll && this.scroll.refresh()
       },
-      scrollTo   () {
+      scrollTo () {
         this.scroll && this.scroll.scrollTo.apply(this.scroll, arguments)
       },
       scrollToElement () {
