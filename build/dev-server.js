@@ -27,6 +27,7 @@ const app = express()
 // //修改的内容
 let apiRouter = express.Router()
 apiRouter.get('/getDistList', function (req, res, next) {
+  console.log(req.headers)
   let url = 'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg'
   axios.get(url, {
     headers: {

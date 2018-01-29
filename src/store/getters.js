@@ -12,6 +12,8 @@ export const mode = state => state.mode
 
 export const currentIndex = state => state.currentIndex
 
+export const token = state => state.token
+
 export const currentSong = (state) => {
   if (state.currentIndex === -1) {
     return ''

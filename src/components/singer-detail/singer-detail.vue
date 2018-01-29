@@ -7,10 +7,11 @@
 
 <script type="text/ecmascript-6">
   import MusicList from 'components/music-list/music-list'
-  import {mapGetters} from 'vuex'
-  import {getSingerDetail} from 'api/singer'
-  import {ERR_OK} from 'api/config'
-  import {createSong} from 'common/js/song'
+  import { mapGetters } from 'vuex'
+  import { getSingerDetail } from 'api/singer'
+  import { ERR_OK } from 'api/config'
+  import { createSong } from 'common/js/song'
+  import axios from 'axios'
 
   export default {
     computed: {
@@ -20,19 +21,19 @@
       ...mapGetters([
         'singer'
       ]),
-      title() { //  return
+      title () { //  return
         return this.singer.name
       },
-      bgImage() { //  return
+      bgImage () { //  return
         return this.singer.avatar
       }
     },
-    data() {
+    data () {
       return {
         songs: []
       }
     },
-    created() {
+    created () {
       if (!this.singer.id) {
         this.$router.push('/singer')
         return
@@ -40,7 +41,11 @@
       this._getDetail()
     },
     methods: {
-      _getDetail() {
+      _getDetail () {
+        console.log(this.$route.params.id)
+        axios.post('/user/login.htm').then((res) => {
+          console.log(res)
+        })
         if (!this.singer.id) {
           this.$router.push('/singer')
           return
@@ -51,7 +56,7 @@
           }
         })
       },
-      _normalizeSong(list) {
+      _normalizeSong (list) {
         let ret = []
         list.forEach((item) => {
           let {musicData} = item

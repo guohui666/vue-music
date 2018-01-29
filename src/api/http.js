@@ -19,7 +19,7 @@ axios.defaults.baseURL = ''
 axios.interceptors.request.use(
   config => {
     if (store.state.token) {
-      config.headers.Authorization = `token ${store.state.token}`
+      config.headers.Authorization = `${store.state.token}`
     }
     return config
   },
@@ -37,7 +37,8 @@ axios.interceptors.response.use(
       switch (error.response.status) {
         case 401:
           // 401 清除token信息并跳转到登录页面
-          store.commit(store.mutations.SET_TONKEN)
+          store.commit('SET_TONKEN')
+          // console.log(store.commit('SET_TONKEN', '123'))
           router.replace({
             path: 'search',
             query: {redirect: router.currentRoute.fullPath}
@@ -45,7 +46,7 @@ axios.interceptors.response.use(
       }
     }
     // console.log(JSON.stringify(error));//console : Error: Request failed with status code 402
-    return Promise.reject(error.response.data)
+    return Promise.reject(error)
   })
 
 export default axios

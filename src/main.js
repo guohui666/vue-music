@@ -5,11 +5,13 @@ import router from './router'
 import store from './store'
 import fastclick from 'fastclick'
 import VueLazyLoad from 'vue-lazyload'
+import axios from './api/http'
 import 'common/stylus/index.styl'
 // import { JsBridge } from 'common/js/jsBridge'
 import { Alert, Confirm, Toast } from 'wc-messagebox'
 import 'wc-messagebox/style.css'
 
+Vue.prototype.axios = axios
 Vue.use(Alert)
 Vue.use(Confirm)
 Vue.use(Toast)
@@ -26,7 +28,7 @@ Vue.use(VueLazyLoad, {
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
-  render: h => h(App),
+  router,
   store,
-  router
+  render: h => h(App)
 })
