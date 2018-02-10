@@ -4,13 +4,8 @@
  */
 import axios from 'axios'
 import store from '../store'
-// import * as types from '../store/mutation-types'
+import * as types from '../store/mutation-types'
 import router from '../router'
-// import { mapMutations } from 'vuex'
-
-// ...mapMutations({
-//     setSinger: 'SET_SINGER'
-//   })
 // axios 配置
 axios.defaults.timeout = 5000
 axios.defaults.baseURL = ''
@@ -37,7 +32,7 @@ axios.interceptors.response.use(
       switch (error.response.status) {
         case 401:
           // 401 清除token信息并跳转到登录页面
-          store.commit('SET_TONKEN')
+          store.commit(types.SET_TONKEN)
           // console.log(store.commit('SET_TONKEN', '123'))
           router.replace({
             path: 'search',
