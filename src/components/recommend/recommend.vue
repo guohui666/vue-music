@@ -42,7 +42,7 @@
   import Loading from 'base/loading/loading'
   import { registerWindow } from 'common/js/app'
   import { setupWebViewJavascriptBridge } from 'common/js/app'
-  // import { JsBridge } from 'common/js/jsBridge'
+  import  JsBridge  from 'common/js/jsBridge'
   export default {
     components: {
       Slider,

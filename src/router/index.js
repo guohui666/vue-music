@@ -7,12 +7,17 @@ import Rank from 'components/rank/rank'
 import Search from 'components/search/search'
 import SingerDetail from 'components/singer-detail/singer-detail'
 import store from '../store'
+import test from 'components/test/test'
 
 Vue.use(Router)
 const routes = [
   {
     path: '/',
-    redirect: '/recommend'
+    redirect: '/test'
+  },
+  {
+    path: '/test',
+    component: test
   },
   {
     path: '/recommend',
